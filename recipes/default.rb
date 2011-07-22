@@ -19,6 +19,8 @@
 
 nginx_version = node[:nginx][:version]
 
+package "libcurl4-openssl-dev"
+
 remote_file "/tmp/nginx-#{nginx_version}.tar.gz" do
   source "http://nginx.org/download/nginx-#{nginx_version}.tar.gz"
   action :create_if_missing
