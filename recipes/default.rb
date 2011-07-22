@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-nginx_version="1.0.4"
+nginx_version = node[:nginx][:version]
 
 remote_file "/tmp/nginx-#{nginx_version}.tar.gz" do
   source "http://nginx.org/download/nginx-#{nginx_version}.tar.gz"
@@ -88,3 +88,4 @@ service "nginx" do
   supports :restart => true, :reload => true, :status => true
   action [ :enable, :start ]
 end
+
