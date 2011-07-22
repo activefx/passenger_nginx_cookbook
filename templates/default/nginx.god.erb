@@ -10,8 +10,6 @@ God.watch do |w|
   w.restart_grace = 20.seconds
   w.pid_file = "/var/run/nginx.pid"
   w.group = "server"
-  w.uid = 'nginx'
-  w.gid = 'nginx'
   w.behavior(:clean_pid_file)
 
   # determine the state on startup
