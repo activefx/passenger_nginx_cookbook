@@ -40,10 +40,8 @@ if node[:rvm].empty?
 
   gem_package "passenger"
 
-  rvm_shell "update_rubygems" do
-    ruby_string node[:rvm][:default_ruby]
-    user        "root"
-    code        installation_command
+  execute "compile-nginx" do
+    command     installation_command
     not_if      "test -f /opt/nginx/sbin/nginx"
   end
 
@@ -55,8 +53,10 @@ else
     action :install
   end
 
-  execute "compile-nginx" do
-    command     installation_command
+  rvm_shell "update_rubygems" do
+    ruby_string node[:rvm][:default_ruby]
+    user        "root"
+    code        installation_command
     not_if      "test -f /opt/nginx/sbin/nginx"
   end
 
