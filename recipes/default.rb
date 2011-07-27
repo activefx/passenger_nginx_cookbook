@@ -53,9 +53,8 @@ else
     action :install
   end
 
-  rvm_shell "update_rubygems" do
+  rvm_shell "compile-nginx" do
     ruby_string node[:rvm][:default_ruby]
-    user        "root"
     code        installation_command
     not_if      "test -f /opt/nginx/sbin/nginx"
   end
