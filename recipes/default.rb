@@ -34,19 +34,32 @@ execute "extract-nginx" do
   only_if "test -f /tmp/nginx-#{nginx_version}.tar.gz"
 end
 
+installation_command = "passenger-install-nginx-module --auto --prefix=/opt/nginx --nginx-source-dir=/tmp/nginx-#{nginx_version} --extra-configure-flags='--conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock'"
+
 if node[:rvm].empty?
+
   gem_package "passenger"
+
+  rvm_shell "update_rubygems" do
+    ruby_string node[:rvm][:default_ruby]
+    user        "root"
+    code        installation_command
+    not_if      "test -f /opt/nginx/sbin/nginx"
+  end
+
 else
+
   rvm_gem "passenger" do
     ruby_string node[:rvm][:default_ruby]
     #version
     action :install
   end
-end
 
-execute "compile-nginx" do
-  command "passenger-install-nginx-module --auto --prefix=/opt/nginx --nginx-source-dir=/tmp/nginx-#{nginx_version} --extra-configure-flags='--conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock'"
-  not_if "test -f /opt/nginx/sbin/nginx"
+  execute "compile-nginx" do
+    command     installation_command
+    not_if      "test -f /opt/nginx/sbin/nginx"
+  end
+
 end
 
 if platform? "ubuntu", "debian"
