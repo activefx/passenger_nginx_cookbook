@@ -38,7 +38,9 @@ installation_command = "passenger-install-nginx-module --auto --prefix=/opt/ngin
 
 if node[:rvm].empty?
 
-  gem_package "passenger"
+  gem_package "passenger" do
+
+  end
 
   execute "compile-nginx" do
     command     installation_command
@@ -49,7 +51,7 @@ else
 
   rvm_gem "passenger" do
     ruby_string node[:rvm][:default_ruby]
-    #version
+    version node[:nginx][:passenger_version]
     action :install
   end
 

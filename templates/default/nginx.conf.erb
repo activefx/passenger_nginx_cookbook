@@ -25,12 +25,12 @@ http {
 
     #access_log  logs/access.log  main;
 
-    <% require 'rubygems' %>
-    <% require 'open3' %>
-    <% require 'rvm' %>
+    <%# require 'rubygems' %>
+    <%# require 'open3' %>
+    <%# require 'rvm' %>
 
-    passenger_root <%=Open3.popen3("passenger-config --root")[1].read.chomp%>;
-    passenger_ruby <%="#{RVM::Environment.default_rvm_path}/wrappers/#{RVM::Environment.current_environment_id}/ruby"%>;
+    passenger_root /usr/local/rvm/gems/<%=node[:rvm][:default_ruby]%>/gems/passenger-<%=node[:nginx][:passenger_version]%>;
+    passenger_ruby /usr/local/rvm/wrappers/<%=node[:rvm][:default_ruby]%>/ruby;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -136,3 +136,4 @@ http {
     #}
 
 }
+
